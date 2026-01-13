@@ -1,16 +1,48 @@
-# React + Vite
+# Creative Economy — Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This repository contains the Creative Economy Dashboard — a lightweight React + Vite web app that centralises partnership tracking and the Creative Tech programme metrics.
 
-Currently, two official plugins are available:
+## What this dashboard is
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- A partnership tracker: list, create, edit, and delete partnership records (status, field, value, contact, updates).
+- A Creative Tech dashboard: metrics and cohort snapshots for Creative Tech tracks (AI for creatives, Music & Audio Production, Graphic Design, Content Creation).
+- Lightweight local persistence: UI state like column widths are persisted to `localStorage` for convenience during development.
 
-## React Compiler
+## Key features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Responsive dashboard layout with stat cards and charts.
+- Resizable table columns: drag the column edges to expand; columns are compact by default.
+- Compact, readable table rows with status badges and concise metadata.
+- Edit modal with save and delete actions for items.
+- Separate views: Dashboard, Partnerships, and Creative Tech (Selection Dashboard & Cohort snapshots).
 
-## Expanding the ESLint configuration
+## File highlights
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- `src/App.jsx` — Main application UI, routing between views, table rendering, resizing logic, and the Create/Edit modal.
+- `src/index.css` — Tailwind + custom base styles.
+- `public/favicon.svg` — App favicon used in development.
+
+## Local development
+
+1. Install dependencies:
+
+```bash
+cd partnership-tracker
+npm install
+```
+
+2. Start the dev server:
+
+```bash
+npm run dev
+```
+
+3. Open the app in your browser (Vite will show the local URL). The Partnerships view shows the table — drag column edges to resize.
+
+## Notes & next steps
+
+- Column width defaults and compact table styling are intentionally set to be narrow; resizing widens columns and is persisted.
+- If you want server-backed persistence, hook up an API and replace localStorage usage with fetch/axios calls.
+- Accessibility improvements (keyboard resize, ARIA attributes) and touch support for resizers are available as follow-ups.
+
+If you want, I can add a short CONTRIBUTING section or a docker-compose setup — tell me which you'd prefer next.
