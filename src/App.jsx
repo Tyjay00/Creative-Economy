@@ -20,9 +20,12 @@ import {
   Hourglass,
   Tag,
   ArrowRight,
+  Link,
   Pencil,
   X,
-  History
+  History,
+  Maximize2,
+  Minimize2
 } from 'lucide-react';
 
 // --- Configuration & Types ---
@@ -42,6 +45,7 @@ const STATUS_COLORS = {
   'Approved': 'bg-emerald-100 text-emerald-700 border-emerald-200',
   'Rejected': 'bg-red-100 text-red-700 border-red-200',
   'Paused': 'bg-gray-100 text-gray-500 border-gray-200',
+  'In Discussion (No Commitment)': 'bg-yellow-100 text-yellow-700 border-yellow-200',
 };
 
 // --- Parsed CSV Data Integration ---
@@ -54,11 +58,19 @@ const INITIAL_DATA = [
     status: "Active", 
     value: 0,
     contact: "Esther/Seth",
-    date: "2026-01-15", 
+    owner: "Esther/Seth",
+    date: "", 
     version: null,
     fileType: null,
+    collaborationState: 'Ongoing',
+    creativeExpertiseArea: 'Music Production & Industry Access',
     latestUpdate: "30+ Nairobi learners went backstage at Solfest and attended masterclasses in Dec 2025.",
-    nextStep: "Engage on Press Play rollout plan"
+    nextStep: "Engage on Press Play rollout plan for 2026 and internship conversations.",
+    importance: 'Critical',
+    upcomingDeadline: '',
+    areasOfPartnership: '50 masterclass spots; 10 internships; Monthly fireside chats',
+    historicalContext: '',
+    links: ''
   },
   {
     id: 2,
@@ -68,11 +80,19 @@ const INITIAL_DATA = [
     status: "Signed", 
     value: 0,
     contact: "Addis/Seth",
-    date: "Ongoing",
+    owner: "Addis/Seth",
+    date: "",
     version: null,
     fileType: null,
+    collaborationState: 'Planned',
+    creativeExpertiseArea: 'Brand Storytelling & Content Production',
     latestUpdate: "Zeleman participated as a guest in the Creatives Unleashed festival.",
-    nextStep: "Finalize job placement pathways"
+    nextStep: "Finalize job placement pathways for top-performing learners with the Addis team.",
+    importance: 'Critical',
+    upcomingDeadline: 'Ongoing',
+    areasOfPartnership: 'Scholarships; Guaranteed job placements for top learners',
+    historicalContext: '',
+    links: ''
   },
   {
     id: 3,
@@ -82,11 +102,19 @@ const INITIAL_DATA = [
     status: "Active", 
     value: 0,
     contact: "Seth / Tyrone",
-    date: "2025-11-22",
+    owner: "Seth / Tyrone",
+    date: "",
     version: null,
     fileType: null,
+    collaborationState: 'Ongoing',
+    creativeExpertiseArea: 'Podcasting Monetization',
     latestUpdate: "Hosted a networking and training session on Monetization Strategies on Nov 22.",
-    nextStep: "Agree on hosting Africa Podcast day"
+    nextStep: "Agree on hosting of Africa Podcast day at nairobi hub. Extending the MOU",
+    importance: 'Critical',
+    upcomingDeadline: 'Nov 22, 2025 (Session)',
+    areasOfPartnership: 'Podcast host training; Pan-African acquisition play for the vertical strat with local training then host Podcasting monetization session virtually',
+    historicalContext: 'Strategic move to provide learners with tangible "learning to earning" pathways in audio.',
+    links: ''
   },
   {
     id: 4,
@@ -96,81 +124,129 @@ const INITIAL_DATA = [
     status: "Active",
     value: 0,
     contact: "Seth",
-    date: "Ongoing",
+    owner: "Seth",
+    date: "",
     version: null,
     fileType: null,
-    latestUpdate: "Working with Craig King and the milk and cookies team in Johannesburg. Craig Kind also connected us with Soundtrap the providers of the DAW's.",
-    nextStep: "Manage Revenue Share payouts"
+    collaborationState: 'Ongoing',
+    creativeExpertiseArea: 'Music & Audio Production',
+    latestUpdate: "Working with Craig King and the milk and cookies team in Johannesburg. Craig King also connected us with Soundtrap the providers of the DAW's.",
+    nextStep: "Manage Revenue Share payouts; leverage Craig for industry referrals.",
+    importance: 'Critical',
+    upcomingDeadline: 'Ongoing',
+    areasOfPartnership: 'Curriculum partnership; Global industry referrals',
+    historicalContext: '',
+    links: ''
   },
   {
     id: 5,
     category: 'partnerships',
     name: "AMPD Studios",
     field: "Podcasting Studio",
-    status: "Paused",
+    status: "Active",
     value: 0,
     contact: "Seth",
-    date: "Ongoing",
+    owner: "Seth",
+    date: "",
     version: null,
     fileType: null,
-    latestUpdate: "We collaborated as concerns the creation of the Dare To Be More Podcast. Jon Savage also hosted a number of Masterclasses.",
-    nextStep: "Awaiting partner to resolve financial challenges"
+    collaborationState: 'Paused',
+    creativeExpertiseArea: 'Media Tech & Storytelling',
+    latestUpdate: "We collaborated on the creation of the Dare To Be More Podcast. Jon Savage also hosted a number of Masterclasses.",
+    nextStep: "Possible scaling the programmatic ad network for the Africa Podcast Network, however awaiting partner to resolve some financial challenges",
+    importance: 'Critical',
+    upcomingDeadline: 'Ongoing',
+    areasOfPartnership: 'Possibility of securing World-class studio access in JHB; production support for content platforms. However partner is facing financial challenges.',
+    historicalContext: 'Strengthens the mission to amplify African voices through top-tier production and infrastructure.',
+    links: ''
   },
   {
     id: 6,
     category: 'partnerships',
     name: "Canva",
     field: "Digital Design / Freelancing",
-    status: "Approved", 
+    status: "Active", 
     value: 50000, 
     contact: "SA/Nigeria/Kenya",
-    date: "Completed",
+    owner: "South Africa/Nigeria/Kenya",
+    date: "",
     version: null,
     fileType: null,
-    latestUpdate: "Drafting of the impact stories and data (results) from the campaign by the various city teams",
-    nextStep: "Drafting impact stories and data"
+    collaborationState: 'Completed',
+    creativeExpertiseArea: 'Digital Design & Visual Storytelling',
+    latestUpdate: "",
+    nextStep: "Drafting of the impact stories and data (results) from the campaign by the various city teams",
+    importance: 'Important',
+    upcomingDeadline: '',
+    areasOfPartnership: 'Digital design and freelancing upskilling pathways. Sponsorship of 100 ALX All-Access Fee bursaries ($50,000 value). Providing Canva Pro subscriptions and mentorship to challenge winners. Featuring ALX success stories on Canva\'s global channels.',
+    historicalContext: 'The partnership was established to address African youth unemployment by connecting digital skills to global creative industries. Challenge is only for SA, Kenya and Nigeria markets.',
+    links: ''
   },
   {
     id: 7,
     category: 'partnerships',
     name: "Trace",
     field: "Media / Content",
-    status: "Negotiating",
+    status: "In Discussion (No Commitment)",
     value: 0,
     contact: "Seth/Rwanda",
-    date: "2025-12-01", 
+    owner: "Seth/Rwanda",
+    date: "", 
     version: null,
     fileType: null,
+    collaborationState: 'Not applicable yet',
+    creativeExpertiseArea: 'Content Amplification',
     latestUpdate: "Aligned on the Rwanda, Nairobi and South Africa activation play. Main areas to agree is how to ensure Trace provides value by delivering global promotion, showcasing learner work, running expert-led residencies and in exchange ALX offers access to a learner and alumni community, top creative talent",
-    nextStep: "Finalize MOU activation play"
+    nextStep: "Finalize MOU activation play for Rwanda and South Africa markets",
+    importance: 'Critical',
+    upcomingDeadline: '45992',
+    areasOfPartnership: 'Marketing amplification; Course integration',
+    historicalContext: '',
+    links: ''
   },
   {
     id: 8,
     category: 'partnerships',
     name: "Soundtrap",
-    field: "Digital Audio Workstation",
+    field: "Production Tools",
     status: "Signed", 
     value: 25000, 
     contact: "Seth",
-    date: "2025-12-10", 
+    owner: "Seth",
+    date: "", 
     version: null,
     fileType: null,
+    collaborationState: 'Planned',
+    creativeExpertiseArea: 'Digital Audio Workstation (DAW)',
     latestUpdate: "",
-    nextStep: "Get learner testimonials approved"
+    nextStep: "Get Soundtrap team to review and approve learner testimonials and blog format",
+    importance: 'Critical',
+    upcomingDeadline: '46001',
+    areasOfPartnership: '250 premium DAW licenses for marketing and retention.',
+    historicalContext: 'Infrastructure-led value exchange to incentivize specialization interest.',
+    links: ''
   },
   {
     id: 9,
     category: 'partnerships',
     name: "Chocolate City",
     field: "Entertainment",
-    status: "Negotiating", 
+    status: "In Discussion (No Commitment)", 
     value: 0,
     contact: "Seth",
-    date: "TBD",
+    owner: "Seth",
+    date: "",
     version: null,
     fileType: null,
+    collaborationState: 'Paused',
+    creativeExpertiseArea: 'Talent Development & Media',
     latestUpdate: "Partnership is on hold due to internal team dynamics on their side.",
-    nextStep: "Finalize financial model & SLA"
+    nextStep: "Finalize the financial model and SLA once internal dynamics resolve.",
+    importance: 'Critical',
+    upcomingDeadline: 'TBD',
+    areasOfPartnership: 'Support for Jos Creative Hub; Founders Fund grants; talent search competitions.',
+    historicalContext: 'Leading entertainment firm with a 20+ year legacy in African talent development.',
+    links: ''
   },
   {
     id: 10,
@@ -180,25 +256,41 @@ const INITIAL_DATA = [
     status: "Active", 
     value: 0,
     contact: "Ama / Steve",
-    date: "Ongoing",
+    owner: "Ama / Steve",
+    date: "",
     version: null,
     fileType: null,
+    collaborationState: 'Ongoing',
+    creativeExpertiseArea: 'Agency Partnerships',
     latestUpdate: "Shared next steps with the Accra team regarding industry collaboration.",
-    nextStep: "Align with Accra team"
+    nextStep: "Align with the Accra team on localized on-ramping and internship playbooks.",
+    importance: 'Critical',
+    upcomingDeadline: 'Ongoing',
+    areasOfPartnership: 'Localized agency internships/engagement',
+    historicalContext: '',
+    links: ''
   },
   {
     id: 11,
     category: 'partnerships',
     name: "AfreximBank",
     field: "Creative Economy Team",
-    status: "Negotiating", 
+    status: "In Discussion (No Commitment)", 
     value: 1000000, 
     contact: "Global Team",
-    date: "Pending",
+    owner: "",
+    date: "",
     version: null,
     fileType: null,
-    latestUpdate: "Full proposal for a large-scale project; curriculum briefs for Gastronomy, Music, Film, and Fashion submitted, awaiting feedback on sucess/onboarding.",
-    nextStep: "Awaiting feedback on success/onboarding"
+    collaborationState: 'Not applicable yet',
+    creativeExpertiseArea: '',
+    latestUpdate: "Full proposal for a large-scale project; curriculum briefs for Gastronomy, Music, Film, and Fashion submitted, awaiting feedback on success/onboarding.",
+    nextStep: "",
+    importance: 'Critical',
+    upcomingDeadline: '',
+    areasOfPartnership: 'Curriculum funding for specialized tracks to ensure vertical sustainability.',
+    historicalContext: 'High-priority bid to secure almost $1M in non-MCF revenue.',
+    links: ''
   },
   {
     id: 12,
@@ -208,11 +300,19 @@ const INITIAL_DATA = [
     status: "Draft",
     value: 0,
     contact: "TBD",
+    owner: '',
     date: "TBD",
     version: null,
     fileType: null,
+    collaborationState: 'Draft',
+    creativeExpertiseArea: 'Events & Culture',
     latestUpdate: "",
-    nextStep: "Initial touch base"
+    nextStep: "Initial touch base",
+    importance: '',
+    upcomingDeadline: '',
+    areasOfPartnership: '',
+    historicalContext: '',
+    links: ''
   },
   {
     id: 13,
@@ -222,11 +322,19 @@ const INITIAL_DATA = [
     status: "Draft",
     value: 0,
     contact: "TBD",
+    owner: '',
     date: "TBD",
     version: null,
     fileType: null,
+    collaborationState: 'Draft',
+    creativeExpertiseArea: 'Film Production & Training',
     latestUpdate: "",
-    nextStep: "Initial outreach"
+    nextStep: "Initial outreach",
+    importance: '',
+    upcomingDeadline: '',
+    areasOfPartnership: '',
+    historicalContext: '',
+    links: ''
   },
   {
     id: 14,
@@ -236,11 +344,19 @@ const INITIAL_DATA = [
     status: "Draft",
     value: 0,
     contact: "TBD",
+    owner: '',
     date: "TBD",
     version: null,
     fileType: null,
+    collaborationState: 'Draft',
+    creativeExpertiseArea: 'Production Support',
     latestUpdate: "",
-    nextStep: "Initial outreach"
+    nextStep: "Initial outreach",
+    importance: '',
+    upcomingDeadline: '',
+    areasOfPartnership: '',
+    historicalContext: '',
+    links: ''
   },
   // --- Tech Deck Items ---
   {
@@ -277,28 +393,31 @@ const SidebarItem = ({ icon: Icon, label, active, onClick, count, isDashboard, c
   <button
     onClick={onClick}
     title={collapsed ? label : undefined}
-    className={`w-full flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium transition-colors mb-1 ${
+    className={`w-full flex items-center px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 mb-1 group overflow-hidden ${
       active 
         ? 'bg-gray-100 text-gray-900' 
         : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
-    }`}
+    } ${collapsed ? 'justify-center' : ''}`}
   >
-    <div className={`flex items-center gap-2 ${collapsed ? 'justify-center w-full' : ''}`}>
-      <Icon size={18} className={isDashboard ? "text-blue-600" : ""} />
-      {!collapsed && label}
+    <Icon size={18} className={`shrink-0 transition-colors duration-300 ${isDashboard ? "text-blue-600" : "text-gray-500 group-hover:text-gray-900"}`} />
+    
+    <div className={`flex items-center flex-1 overflow-hidden transition-all duration-300 ease-in-out ${collapsed ? 'w-0 opacity-0 ml-0' : 'w-auto opacity-100 ml-3'}`}>
+      <span className="whitespace-nowrap truncate">{label}</span>
+      {count > 0 && (
+        <span className="ml-auto bg-gray-200 text-gray-600 text-xs py-0.5 px-2 rounded-full shrink-0">
+          {count}
+        </span>
+      )}
     </div>
-    {!collapsed && count > 0 && (
-      <span className="bg-gray-200 text-gray-600 text-xs py-0.5 px-2 rounded-full">
-        {count}
-      </span>
-    )}
   </button>
 );
 
 const StatusBadge = ({ status }) => {
   const colorClass = STATUS_COLORS[status] || 'bg-gray-100 text-gray-600 border-gray-200';
+  const isLongText = status && status.length > 15;
+  
   return (
-    <span className={`px-2 py-0.5 rounded-md text-xs font-medium border ${colorClass} whitespace-nowrap`}>
+    <span className={`px-2.5 py-1 rounded-md font-medium border ${colorClass} ${isLongText ? 'text-[10px] whitespace-normal leading-tight text-center' : 'text-xs whitespace-nowrap'} inline-block`}>
       {status}
     </span>
   );
@@ -358,12 +477,20 @@ const ItemModal = ({ isOpen, onClose, activeView, onSave, itemToEdit, onDelete }
     name: '',
     status: 'Draft',
     contact: '',
+    owner: '',
     value: '',
     version: '',
     fileType: '',
     field: '',
+    collaborationState: '',
+    creativeExpertiseArea: '',
     latestUpdate: '',
-    nextStep: ''
+    nextStep: '',
+    importance: '',
+    upcomingDeadline: '',
+    areasOfPartnership: '',
+    historicalContext: '',
+    links: ''
   });
 
   // Populate form when opening for edit, or reset for new
@@ -374,24 +501,40 @@ const ItemModal = ({ isOpen, onClose, activeView, onSave, itemToEdit, onDelete }
           name: itemToEdit.name || '',
           status: itemToEdit.status || 'Draft',
           contact: itemToEdit.contact || '',
+          owner: itemToEdit.owner || '',
           value: itemToEdit.value || '',
           version: itemToEdit.version || '',
           fileType: itemToEdit.fileType || '',
           field: itemToEdit.field || '',
+          collaborationState: itemToEdit.collaborationState || '',
+          creativeExpertiseArea: itemToEdit.creativeExpertiseArea || '',
           latestUpdate: itemToEdit.latestUpdate || '',
-          nextStep: itemToEdit.nextStep || ''
+          nextStep: itemToEdit.nextStep || '',
+          importance: itemToEdit.importance || '',
+          upcomingDeadline: itemToEdit.upcomingDeadline || '',
+          areasOfPartnership: itemToEdit.areasOfPartnership || '',
+          historicalContext: itemToEdit.historicalContext || '',
+          links: itemToEdit.links || ''
         });
       } else {
         setFormData({
           name: '',
           status: 'Draft',
           contact: '',
+          owner: '',
           value: '',
           version: '',
           fileType: '',
           field: '',
+          collaborationState: '',
+          creativeExpertiseArea: '',
           latestUpdate: '',
-          nextStep: ''
+          nextStep: '',
+          importance: '',
+          upcomingDeadline: '',
+          areasOfPartnership: '',
+          historicalContext: '',
+          links: ''
         });
       }
     }
@@ -459,6 +602,7 @@ const ItemModal = ({ isOpen, onClose, activeView, onSave, itemToEdit, onDelete }
                 <option>Approved</option>
                 <option>Paused</option>
                 <option>Rejected</option>
+                <option>In Discussion (No Commitment)</option>
               </select>
             </div>
             <div>
@@ -514,6 +658,95 @@ const ItemModal = ({ isOpen, onClose, activeView, onSave, itemToEdit, onDelete }
                     placeholder="What needs to happen next?"
                     value={formData.nextStep}
                     onChange={e => setFormData({...formData, nextStep: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Owner</label>
+                  <input
+                    type="text"
+                    className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm"
+                    placeholder="Owner / contact"
+                    value={formData.owner}
+                    onChange={e => setFormData({...formData, owner: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Collaboration State</label>
+                  <select
+                    className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white text-sm"
+                    value={formData.collaborationState}
+                    onChange={e => setFormData({...formData, collaborationState: e.target.value})}
+                  >
+                    <option value="">Select</option>
+                    <option>Planned</option>
+                    <option>Ongoing</option>
+                    <option>Paused</option>
+                    <option>Completed</option>
+                    <option>On Hold</option>
+                    <option>In Discussion</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Creative Expertise Area</label>
+                  <input
+                    type="text"
+                    className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm"
+                    placeholder="e.g. Podcasting Monetization"
+                    value={formData.creativeExpertiseArea}
+                    onChange={e => setFormData({...formData, creativeExpertiseArea: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Importance</label>
+                  <select
+                    className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white text-sm"
+                    value={formData.importance}
+                    onChange={e => setFormData({...formData, importance: e.target.value})}
+                  >
+                    <option value="">Select</option>
+                    <option>Critical</option>
+                    <option>Important</option>
+                    <option>Low</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Upcoming Deadline</label>
+                  <input
+                    type="text"
+                    className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm"
+                    placeholder="YYYY-MM-DD or notes"
+                    value={formData.upcomingDeadline}
+                    onChange={e => setFormData({...formData, upcomingDeadline: e.target.value})}
+                  />
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Areas Of Partnership</label>
+                  <textarea
+                    rows={2}
+                    className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm resize-none"
+                    placeholder="Scope or areas of partnership"
+                    value={formData.areasOfPartnership}
+                    onChange={e => setFormData({...formData, areasOfPartnership: e.target.value})}
+                  />
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Historical Context</label>
+                  <textarea
+                    rows={2}
+                    className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm resize-none"
+                    placeholder="Background / notes"
+                    value={formData.historicalContext}
+                    onChange={e => setFormData({...formData, historicalContext: e.target.value})}
+                  />
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Links</label>
+                  <input
+                    type="text"
+                    className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm"
+                    placeholder="https://..."
+                    value={formData.links}
+                    onChange={e => setFormData({...formData, links: e.target.value})}
                   />
                 </div>
              </>
@@ -580,12 +813,36 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [columnWidths, setColumnWidths] = useState({});
+  const [isFullScreen, setIsFullScreen] = useState(false);
   const dragState = useRef({ dragging: false, colKey: null, startX: 0, startWidth: 0 });
   const columnWidthsRef = useRef({});
+  const tableContainerRef = useRef(null);
   const STORAGE_KEY = 'pt_column_widths_v1';
   const MIN_COL_WIDTH = 50;
   const MAX_COL_WIDTH = 600;
   const SAMPLE_ROWS = 8;
+
+  // Handle Shift+Scroll for horizontal scrolling
+  useEffect(() => {
+    const handleWheel = (e) => {
+      if (!e.shiftKey) return;
+      const container = tableContainerRef.current;
+      if (!container) return;
+      
+      e.preventDefault();
+      // Scroll horizontally based on wheel deltaY
+      const scrollAmount = e.deltaY > 0 ? 50 : -50;
+      container.scrollLeft += scrollAmount;
+    };
+
+    const tableElement = tableContainerRef.current;
+    if (tableElement) {
+      tableElement.addEventListener('wheel', handleWheel, { passive: false });
+      return () => {
+        tableElement.removeEventListener('wheel', handleWheel);
+      };
+    }
+  }, []);
 
   useEffect(() => {
     const onMouseMove = (e) => {
@@ -685,36 +942,42 @@ export default function App() {
   const dashboardStats = useMemo(() => {
     const partnerships = items.filter(i => i.category === VIEWS.PARTNERSHIPS);
     
-    // Successful = deals that have a reported value (> 0)
-    const successfulDeals = partnerships.filter(i => i.value && i.value > 0);
-
-    // Pending = deals without a reported value (TBD / 0 / null)
-    const pendingDeals = partnerships.filter(i => !i.value);
+    // Successful = Active/Delivered or Signed/Confirmed
+    const successfulDeals = partnerships.filter(i => [
+      'Active', 
+      'Signed', 
+      'Approved'
+    ].includes(i.status));
 
     // Pipeline = Everything actively being worked on (includes Negotiating & Review)
-    const pipelineDeals = partnerships.filter(i => ['Signed', 'Active', 'Approved', 'Negotiating', 'Review'].includes(i.status));
+    // "In Discussion (No Commitment)" maps to Negotiating logic
+    const pipelineDeals = partnerships.filter(i => ![
+      'Rejected', 
+      'Paused', 
+      'Draft'
+    ].includes(i.status));
 
     const totalPipelineValue = pipelineDeals.reduce((sum, item) => sum + (item.value || 0), 0);
 
     // Data for mini chart
-    const statusCounts = {
-        'Signed': partnerships.filter(i => i.status === 'Signed').length,
-        'Active': partnerships.filter(i => i.status === 'Active').length,
-        'Negotiating': partnerships.filter(i => i.status === 'Negotiating').length,
-        'Draft': partnerships.filter(i => i.status === 'Draft').length,
-    };
+    // Mapping specific CSV statuses to chart categories
+    // Updated filtering to use standard Active/Signed
+    const deliveredCount = partnerships.filter(i => i.status === 'Active').length;
+    const confirmedCount = partnerships.filter(i => i.status === 'Signed').length;
+    const discussionCount = partnerships.filter(i => i.status === 'In Discussion (No Commitment)' || i.status === 'Negotiating').length;
+    const draftCount = partnerships.filter(i => i.status === 'Draft').length;
 
     return {
         totalPartnerships: partnerships.length,
       totalSuccessful: successfulDeals.length,
       totalValue: totalPipelineValue,
-      pendingCount: pendingDeals.length,
-      pendingValue: pendingDeals.reduce((sum, item) => sum + (item.value || 0), 0),
+      pendingCount: partnerships.filter(i => i.status === 'Draft' || i.status === 'In Discussion (No Commitment)').length,
+      pendingValue: 0, // Placeholder
         chartData: [
-            { label: 'Signed', value: statusCounts['Signed'], color: 'bg-blue-500' },
-            { label: 'Active', value: statusCounts['Active'], color: 'bg-green-500' },
-            { label: 'Negot.', value: statusCounts['Negotiating'], color: 'bg-yellow-400' },
-            { label: 'Draft', value: statusCounts['Draft'], color: 'bg-gray-300' },
+            { label: 'Active', value: deliveredCount, color: 'bg-green-500' },
+            { label: 'Signed', value: confirmedCount, color: 'bg-blue-500' },
+            { label: 'In Disc.', value: discussionCount, color: 'bg-yellow-400' },
+            { label: 'Draft', value: draftCount, color: 'bg-gray-300' },
         ]
     };
   }, [items]);
@@ -765,28 +1028,32 @@ export default function App() {
 
   // --- Logic: Define Columns based on View ---
   const getColumns = () => {
-    const common = [
-      { header: 'Name', key: 'name', icon: FileText, defaultWidth: 140 },
-      { header: 'Status', key: 'status', icon: Hash, defaultWidth: 70 },
-    ];
-
+    // Define columns matching the spreadsheet attachments
     if (activeView === VIEWS.PARTNERSHIPS) {
       return [
-        ...common,
-        { header: 'Field', key: 'field', icon: Tag, defaultWidth: 100, render: (val) => <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded">{val}</span> },
-        { header: 'Latest Update', key: 'latestUpdate', icon: History, defaultWidth: 150, render: (val) => <span className="text-xs text-gray-500 block w-full" title={val}>{val || '-'}</span> },
-        { header: 'Next Step', key: 'nextStep', icon: ArrowRight, defaultWidth: 120, render: (val) => <span className="text-xs text-gray-600 block w-full" title={val}>{val || '-'}</span> },
-        { header: 'Value', key: 'value', icon: DollarSign, defaultWidth: 70, render: (val) => val ? `$${val.toLocaleString()}` : <span className="text-gray-300 text-xs">TBD</span> },
-        { header: 'Contact', key: 'contact', icon: User, defaultWidth: 90 },
-      ];
-    } else {
-      return [
-        ...common,
-        { header: 'Date', key: 'date', icon: Calendar, defaultWidth: 110 },
-        { header: 'Version', key: 'version', icon: Hash, defaultWidth: 110 },
-        { header: 'Type', key: 'fileType', icon: FileText, defaultWidth: 120 },
+        { header: 'Partner Name', key: 'name', icon: FileText, defaultWidth: 220 },
+        { header: 'Partnership Field', key: 'field', icon: Tag, defaultWidth: 160, render: (val) => <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded">{val || '-'}</span> },
+        { header: 'Status', key: 'status', icon: Hash, defaultWidth: 160, render: (val) => <StatusBadge status={val} /> },
+        { header: 'Collaboration State', key: 'collaborationState', icon: Briefcase, defaultWidth: 150 },
+        { header: 'Creative Expertise Area', key: 'creativeExpertiseArea', icon: Palette, defaultWidth: 200 },
+        { header: 'Latest Update & Past Collaborations', key: 'latestUpdate', icon: History, defaultWidth: 300, render: (val) => <div className="text-xs text-gray-600 whitespace-normal break-words line-clamp-3">{val || '-'}</div> },
+        { header: 'Key Next Steps/Partnership Status', key: 'nextStep', icon: ArrowRight, defaultWidth: 280, render: (val) => <div className="text-xs text-gray-700 whitespace-normal break-words line-clamp-3">{val || '-'}</div> },
+        { header: 'Importance', key: 'importance', icon: Tag, defaultWidth: 120, render: (val) => <span className="text-xs px-2 py-0.5 rounded bg-gray-100 text-gray-700">{val || '-'}</span> },
+        { header: 'Owner', key: 'owner', icon: User, defaultWidth: 160 },
+        { header: 'Upcoming Deadline', key: 'upcomingDeadline', icon: Calendar, defaultWidth: 160 },
+        { header: 'Areas of Partnership', key: 'areasOfPartnership', icon: FileText, defaultWidth: 280, render: (val) => <div className="text-xs text-gray-600 whitespace-normal break-words line-clamp-3">{val || '-'}</div> },
+        { header: 'Historical Context', key: 'historicalContext', icon: History, defaultWidth: 260, render: (val) => <div className="text-xs text-gray-600 whitespace-normal break-words line-clamp-2">{val || '-'}</div> },
+        { header: 'Links', key: 'links', icon: Link, defaultWidth: 100, render: (val) => val ? <a href={val} className="text-blue-600 underline text-xs" target="_blank" rel="noreferrer">Link</a> : '-' },
       ];
     }
+
+    // Tech deck / other views keep a compact set
+    return [
+      { header: 'Name', key: 'name', icon: FileText, defaultWidth: 180 },
+      { header: 'Date', key: 'date', icon: Calendar, defaultWidth: 120 },
+      { header: 'Version', key: 'version', icon: Hash, defaultWidth: 110 },
+      { header: 'Type', key: 'fileType', icon: FileText, defaultWidth: 120 },
+    ];
   };
 
   const currentColumns = getColumns();
@@ -794,96 +1061,114 @@ export default function App() {
   return (
     <div className="flex h-screen bg-white text-gray-800 font-sans selection:bg-blue-100">
       
-      {/* Sidebar */}
-      {/* left-edge open button when sidebar is hidden */}
-      {sidebarCollapsed && (
-        <button
-          onClick={() => setSidebarCollapsed(false)}
-          className="fixed left-3 top-1/2 -translate-y-1/2 z-40 bg-white border rounded-full p-2 shadow hover:bg-gray-100 hidden md:flex"
-          aria-label="Open sidebar"
-        >
-          <ChevronDown size={16} className="rotate-90 transform" />
-        </button>
-      )}
-
-      <div className={`${sidebarCollapsed ? 'hidden' : 'w-64'} border-r border-gray-200 bg-gray-50/50 flex flex-col hidden md:flex shrink-0 transition-all duration-150`}>
-        <div className="p-4 border-b border-gray-200/50">
-          <div className="flex items-center gap-2 font-bold text-gray-700 justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 bg-blue-600 rounded text-white flex items-center justify-center text-xs">N</div>
-              <span>Creative Economy</span>
-            </div>
+      {/* Sidebar - Hide if full screen */}
+      {!isFullScreen && (
+        <>
+          {sidebarCollapsed && (
             <button
-              onClick={() => setSidebarCollapsed(s => !s)}
-              className="p-1 rounded hover:bg-gray-100 text-gray-500"
-              aria-label={sidebarCollapsed ? 'Open sidebar' : 'Collapse sidebar'}
+              onClick={() => setSidebarCollapsed(false)}
+              className="fixed left-3 top-1/2 -translate-y-1/2 z-40 bg-white border rounded-full p-2 shadow hover:bg-gray-100 hidden md:flex"
+              aria-label="Open sidebar"
             >
-              <ChevronDown size={16} className={`${sidebarCollapsed ? 'rotate-90' : '-rotate-90'} transform transition-transform`} />
+              <ChevronDown size={16} className="rotate-90 transform" />
             </button>
-          </div>
-        </div>
-        
-        <div className="flex-1 p-2 overflow-y-auto">
-          <div className="text-xs font-semibold text-gray-400 px-3 py-2 uppercase tracking-wider">Dashboard</div>
-          <SidebarItem 
-            icon={BarChart3} 
-            label="Overview" 
-            active={activeView === VIEWS.DASHBOARD}
-            onClick={() => setActiveView(VIEWS.DASHBOARD)}
-            isDashboard={true}
-            collapsed={sidebarCollapsed}
-          />
-          
-          <div className="text-xs font-semibold text-gray-400 px-3 py-2 mt-4 uppercase tracking-wider">Database Views</div>
-          <SidebarItem 
-            icon={Briefcase} 
-            label="Partnerships" 
-            active={activeView === VIEWS.PARTNERSHIPS}
-            onClick={() => setActiveView(VIEWS.PARTNERSHIPS)}
-            count={counts[VIEWS.PARTNERSHIPS]}
-            collapsed={sidebarCollapsed}
-          />
-          <SidebarItem 
-            icon={Palette} 
-            label="Creative Tech" 
-            active={activeView === VIEWS.TECH_DECK}
-            onClick={() => setActiveView(VIEWS.TECH_DECK)}
-            count={counts[VIEWS.TECH_DECK]}
-            collapsed={sidebarCollapsed}
-          />
-        </div>
+          )}
 
-        <div className="p-4 border-t border-gray-200 text-xs text-gray-400">
-          Creative Economy Team
-        </div>
-      </div>
+          <div className={`${sidebarCollapsed ? 'w-20' : 'w-64'} border-r border-gray-200 bg-gray-50/50 flex flex-col hidden md:flex shrink-0 transition-all duration-300 ease-in-out`}>
+            
+            {/* Header */}
+            <div className="p-4 border-b border-gray-200/50 h-16 flex items-center justify-between overflow-hidden">
+               <div className="flex items-center gap-2 overflow-hidden">
+                  <div className="w-6 h-6 bg-blue-600 rounded text-white flex items-center justify-center text-xs shrink-0 font-bold">N</div>
+                  <span className={`font-bold text-gray-700 whitespace-nowrap transition-all duration-300 ${sidebarCollapsed ? 'w-0 opacity-0' : 'w-auto opacity-100'}`}>
+                    Creative Economy
+                  </span>
+               </div>
+               
+               <button
+                  onClick={() => setSidebarCollapsed(s => !s)}
+                  className={`p-1 rounded hover:bg-gray-100 text-gray-500 shrink-0 transition-transform duration-300 ${sidebarCollapsed ? 'rotate-180 ml-auto mr-auto' : ''}`} // Adjust alignment if needed
+               >
+                  <ChevronDown size={16} className="-rotate-90" />
+               </button>
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 p-2 overflow-y-auto overflow-x-hidden">
+               {/* Section Header */}
+               <div className={`text-xs font-semibold text-gray-400 px-3 py-2 uppercase tracking-wider whitespace-nowrap transition-all duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0 h-0 p-0 overflow-hidden' : 'opacity-100 h-auto'}`}>
+                  Dashboard
+               </div>
+              
+              <SidebarItem 
+                icon={BarChart3} 
+                label="Overview" 
+                active={activeView === VIEWS.DASHBOARD}
+                onClick={() => setActiveView(VIEWS.DASHBOARD)}
+                isDashboard={true}
+                collapsed={sidebarCollapsed}
+              />
+              
+               <div className={`text-xs font-semibold text-gray-400 px-3 py-2 mt-4 uppercase tracking-wider whitespace-nowrap transition-all duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0 h-0 p-0 overflow-hidden' : 'opacity-100 h-auto'}`}>
+                  Database Views
+               </div>
+              
+              <SidebarItem 
+                icon={Briefcase} 
+                label="Partnerships" 
+                active={activeView === VIEWS.PARTNERSHIPS}
+                onClick={() => setActiveView(VIEWS.PARTNERSHIPS)}
+                count={counts[VIEWS.PARTNERSHIPS]}
+                collapsed={sidebarCollapsed}
+              />
+              <SidebarItem 
+                icon={Palette} 
+                label="Creative Tech" 
+                active={activeView === VIEWS.TECH_DECK}
+                onClick={() => setActiveView(VIEWS.TECH_DECK)}
+                count={counts[VIEWS.TECH_DECK]}
+                collapsed={sidebarCollapsed}
+              />
+            </div>
+
+            {/* Footer */}
+             <div className="p-4 border-t border-gray-200 text-xs text-gray-400 whitespace-nowrap overflow-hidden flex justify-center">
+               <div className={`transition-all duration-300 ${sidebarCollapsed ? 'text-center' : ''}`}>
+                 {sidebarCollapsed ? 'CE' : 'Creative Economy Team'} 
+               </div>
+             </div>
+          </div>
+        </>
+      )}
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col h-full overflow-hidden">
         
-        {/* Header */}
-        <div className="h-16 border-b border-gray-200 flex items-center justify-between px-4 sm:px-8 bg-white shrink-0">
-          <div className="flex items-center gap-2 overflow-hidden">
-            <div className="md:hidden mr-2">
-              <Layout size={20} className="text-gray-500" />
-            </div>
-            
-            <span className="flex items-center gap-2 text-gray-500">
-              <Database size={16} />
+        {/* Header - Hide if full screen */}
+        {!isFullScreen && (
+          <div className="h-16 border-b border-gray-200 flex items-center justify-between px-4 sm:px-8 bg-white shrink-0">
+            <div className="flex items-center gap-2 overflow-hidden">
+              <div className="md:hidden mr-2">
+                <Layout size={20} className="text-gray-500" />
+              </div>
               
-            </span>
-            <span className="text-gray-300">/</span>
-            <div className="flex items-center gap-2 font-medium text-gray-900 truncate">
-               {activeView === VIEWS.DASHBOARD ? <BarChart3 size={18} /> : (activeView === VIEWS.PARTNERSHIPS ? <Briefcase size={18} /> : <Palette size={18} />)}
-               {activeView === VIEWS.DASHBOARD ? 'Dashboard' : (activeView === VIEWS.PARTNERSHIPS ? 'Partnership Tracker' : 'Creative Tech Deck')}
+              <span className="flex items-center gap-2 text-gray-500">
+                <Database size={16} />
+                
+              </span>
+              <span className="text-gray-300">/</span>
+              <div className="flex items-center gap-2 font-medium text-gray-900 truncate">
+                 {activeView === VIEWS.DASHBOARD ? <BarChart3 size={18} /> : (activeView === VIEWS.PARTNERSHIPS ? <Briefcase size={18} /> : <Palette size={18} />)}
+                 {activeView === VIEWS.DASHBOARD ? 'Dashboard' : (activeView === VIEWS.PARTNERSHIPS ? 'Partnership Tracker' : 'Creative Tech Deck')}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+               <div className="text-xs text-gray-400 hidden sm:block">Last edited today</div>
+               <button className="p-1 hover:bg-gray-100 rounded text-gray-500"><MoreHorizontal size={20} /></button>
             </div>
           </div>
-
-          <div className="flex items-center gap-3">
-             <div className="text-xs text-gray-400 hidden sm:block">Last edited today</div>
-             <button className="p-1 hover:bg-gray-100 rounded text-gray-500"><MoreHorizontal size={20} /></button>
-          </div>
-        </div>
+        )}
 
         {/* --- UNIFIED TOOLBAR --- */}
         <div className="px-4 sm:px-8 py-4 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center shrink-0 border-b border-gray-100 bg-white z-10">
@@ -925,6 +1210,13 @@ export default function App() {
               <Filter size={18} />
             </button>
             <button 
+              onClick={() => setIsFullScreen(!isFullScreen)}
+              className="p-1.5 text-gray-500 hover:bg-gray-100 rounded-md border border-transparent hover:border-gray-200 transition-all"
+              title={isFullScreen ? "Exit Full Screen" : "Enter Full Screen"}
+            >
+              {isFullScreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+            </button>
+            <button 
               onClick={handleOpenNew}
               className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-md text-sm font-medium shadow-sm transition-colors whitespace-nowrap"
             >
@@ -935,8 +1227,8 @@ export default function App() {
 
         {/* --- CONTENT RENDER --- */}
         {activeView === VIEWS.DASHBOARD ? (
-          <div className="flex-1 overflow-auto bg-gray-50/30 p-8">
-            <div className="w-full max-w-[1200px] mx-auto px-4 space-y-8">
+          <div className="flex-1 overflow-auto bg-gray-50/30 p-10">
+            <div className="w-full mx-auto space-y-8">
               
               <div>
                 <h2 className="text-2xl font-bold text-gray-800 mb-2">Welcome back</h2>
@@ -944,7 +1236,7 @@ export default function App() {
               </div>
 
               {/* Stats Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 <StatCard 
                   title="Total Partnerships"
                   value={dashboardStats.totalPartnerships}
@@ -970,7 +1262,7 @@ export default function App() {
 
                 <StatCard 
                   title="Pipeline Value"
-                  value={formatCurrency(dashboardStats.totalValue)}
+                  value={'$' + formatNumber(dashboardStats.totalValue)}
                   icon={DollarSign}
                   colorClass="bg-purple-500 text-purple-600"
                 />
@@ -978,7 +1270,7 @@ export default function App() {
               </div>
 
               {/* Charts Section */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2">
                   <SimpleBarChart 
                     data={dashboardStats.chartData} 
@@ -994,7 +1286,11 @@ export default function App() {
                   </h3>
                   <div className="space-y-3">
                     {items
-                      .filter(i => i.category === VIEWS.PARTNERSHIPS && ['Signed', 'Active'].includes(i.status))
+                      .filter(i => i.category === VIEWS.PARTNERSHIPS && [
+                        'Active', 
+                        'Signed', 
+                        'Approved'
+                      ].includes(i.status))
                       .slice(0, 3)
                       .map(deal => (
                       <div key={deal.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100">
@@ -1004,13 +1300,17 @@ export default function App() {
                           </div>
                           <div>
                             <div className="text-sm font-medium text-gray-900">{deal.name}</div>
-                            <div className="text-xs text-gray-500">{deal.date}</div>
+                            <div className="text-xs text-gray-500">{deal.date || 'Ongoing'}</div>
                           </div>
                         </div>
                         <StatusBadge status={deal.status} />
                       </div>
                     ))}
-                    {items.filter(i => i.category === VIEWS.PARTNERSHIPS && ['Signed', 'Active'].includes(i.status)).length === 0 && (
+                    {items.filter(i => i.category === VIEWS.PARTNERSHIPS && [
+                        'Active', 
+                        'Signed', 
+                        'Approved'
+                      ].includes(i.status)).length === 0 && (
                       <p className="text-sm text-gray-400 italic">No closed deals yet.</p>
                     )}
                   </div>
@@ -1021,18 +1321,19 @@ export default function App() {
           </div>
         ) : activeView === VIEWS.PARTNERSHIPS ? (
           // --- PARTNERSHIPS TABLE VIEW ---
-          <div className="flex-1 overflow-auto px-4 sm:px-8 pb-8 pt-6">
-            <div className="border border-gray-200 rounded-lg overflow-hidden min-w-[600px] shadow-sm">
+          <div className="flex-1 flex flex-col overflow-hidden px-4 sm:px-8 pb-4 pt-6">
+            <div ref={tableContainerRef} className="flex-1 border border-gray-200 rounded-lg overflow-auto shadow-sm relative bg-white">
+              <div className="inline-block min-w-full align-middle">
               {/* Table Header */}
-              <div className="flex items-center bg-gray-50/80 border-b border-gray-200 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+              <div className="sticky top-0 z-10 flex items-center bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-500 uppercase tracking-wide">
                 {currentColumns.map((col) => {
                   const computedWidth = columnWidths[col.key] ?? col.defaultWidth ?? 120;
                   return (
                   <div
                     key={col.key}
                     data-col={col.key}
-                    className={`relative px-2 py-1 flex items-center gap-2 border-r border-gray-200 last:border-r-0 flex-none`}
-                    style={{ width: `${computedWidth}px` }}
+                    className={`relative px-4 py-4 flex items-center gap-2 border-r border-gray-200 last:border-r-0 flex-none overflow-hidden bg-gray-50`}
+                    style={{ width: `${computedWidth}px`, minHeight: '56px' }}
                   >
                     <col.icon size={11} className="text-gray-400" />
                     <div className="flex items-center gap-2">
@@ -1046,7 +1347,7 @@ export default function App() {
                     />
                   </div>
                 )})}
-                <div className="w-20 px-4 py-3 border-l border-gray-200 text-center">Edit</div>
+                <div className="w-24 px-2 py-3 border-l border-gray-200 text-center bg-gray-50">Edit</div>
               </div>
 
               {/* Table Body */}
@@ -1059,17 +1360,22 @@ export default function App() {
                   </div>
                 ) : (
                   filteredItems.map((item) => (
-                    <div key={item.id} className="flex items-center border-b border-gray-100 hover:bg-gray-50/50 transition-colors group">
+                    <div
+                      key={item.id}
+                      onDoubleClick={() => handleOpenEdit(item)}
+                      role="button"
+                      tabIndex={0}
+                      className="flex items-center border-b border-gray-100 hover:bg-gray-50/50 transition-colors group"
+                    >
                       
                       {currentColumns.map((col) => {
                         const computedWidth = columnWidths[col.key] ?? col.defaultWidth ?? 120;
-                        const isExpanded = !!columnWidths[col.key] && columnWidths[col.key] > (col.defaultWidth || 0);
                         return (
                         <div
                           key={`${item.id}-${col.key}`}
                           data-col={col.key}
-                          className={`px-2 py-1 text-sm border-r border-transparent group-hover:border-gray-100 last:border-r-0 flex-none ${isExpanded ? 'whitespace-normal break-words' : 'truncate'}`}
-                          style={{ width: `${computedWidth}px` }}
+                          className={`px-4 py-4 text-sm border-r border-transparent group-hover:border-gray-100 last:border-r-0 flex-none overflow-hidden whitespace-normal break-words`}
+                          style={{ width: `${computedWidth}px`, minHeight: '80px', display: 'flex', alignItems: 'center' }}
                         >
                           {col.key === 'status' ? (
                             <StatusBadge status={item[col.key]} />
@@ -1084,7 +1390,7 @@ export default function App() {
                       )})}
                       
                       {/* Row Actions */}
-                      <div className="w-20 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity border-l border-transparent group-hover:border-gray-100">
+                      <div className="w-24 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity border-l border-transparent group-hover:border-gray-100">
                         <button 
                           onClick={() => handleOpenEdit(item)}
                           className="p-1.5 hover:bg-blue-50 text-gray-400 hover:text-blue-600 rounded-md transition-colors"
@@ -1106,12 +1412,13 @@ export default function App() {
                 <Plus size={16} className="mr-2" />
                 New
               </div>
+              </div>
             </div>
           </div>
         ) : activeView === VIEWS.TECH_DECK ? (
           // --- CREATE TECH DASHBOARD (split: Professional Foundations & Creative Tech Specialization) ---
           <div className="flex-1 overflow-auto bg-gray-50 p-8">
-            <div className="w-full max-w-[1200px] mx-auto px-4 space-y-8">
+            <div className="w-full max-w-7xl mx-auto space-y-8">
               <div>
                 <h2 className="text-2xl font-bold text-gray-800 mb-2">Creative Tech Dashboard</h2>
                 
@@ -1192,7 +1499,7 @@ export default function App() {
                     <h4 className="text-sm font-semibold text-gray-800">Cohort 9</h4>
                     <div className="mt-4 text-gray-700">
                       <div className="flex justify-between"><span>Total Enrolled</span><strong>{formatNumber(3385)}</strong></div>
-                      <div className="flex justify-between mt-2"><span>Graduated</span><strong>{formatNumber(786)}</strong></div>
+                      <div className="flex justify-between mt-2"><span>Activated</span><strong>{formatNumber(786)}</strong></div>
                       <div className="text-xs text-gray-400 mt-3">Conversion: 23%</div>
                     </div>
                   </div>
