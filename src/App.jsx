@@ -10,22 +10,23 @@ import {
   Palette, 
   FileText, 
   ChevronDown,
-  Calendar,
-  DollarSign,
-  Hash,
-  User,
-  BarChart3,
-  TrendingUp,
-  CheckCircle2,
-  Hourglass,
-  Tag,
-  ArrowRight,
-  Link,
-  Pencil,
-  X,
-  History,
-  Maximize2,
-  Minimize2
+  Calendar, 
+  DollarSign, 
+  Hash, 
+  User, 
+  BarChart3, 
+  TrendingUp, 
+  CheckCircle2, 
+  Hourglass, 
+  Tag, 
+  ArrowRight, 
+  Link, 
+  Pencil, 
+  X, 
+  History, 
+  Maximize2, 
+  Minimize2,
+  CalendarRange
 } from 'lucide-react';
 
 // --- Configuration & Types ---
@@ -46,6 +47,81 @@ const STATUS_COLORS = {
   'Rejected': 'bg-red-100 text-red-700 border-red-200',
   'Paused': 'bg-gray-100 text-gray-500 border-gray-200',
   'In Discussion (No Commitment)': 'bg-yellow-100 text-yellow-700 border-yellow-200',
+};
+
+// --- TECH DECK DATA ---
+const TECH_METRICS = {
+  pair1: {
+    title: "Cohort 9 (PF) & Cohort 1 (Tech Spec)",
+    pf: {
+      name: "Professional Foundations Cohort 9",
+      dates: "5 May 2025 - 28 July 2025",
+      stats: { enrolled: 3385, graduated: 786 },
+      tracks: [
+        { name: "AI for creatives", enrolled: 393, graduated: 64 },
+        { name: "Content Creation", enrolled: 1310, graduated: 260 },
+        { name: "Graphic Design", enrolled: 1396, graduated: 376 },
+        { name: "Music & Audio", enrolled: 286, graduated: 86 }
+      ]
+    },
+    spec: {
+      name: "Creative Tech Lite Specialization Cohort 1",
+      dates: "18 Aug 2025 - 15 Dec 2025",
+      stats: { enrolled: 2268, graduated: 1062 },
+      tracks: [
+        { name: "AI for creatives", enrolled: 383, graduated: 173 },
+        { name: "Content Creation", enrolled: 709, graduated: 348 },
+        { name: "Graphic Design", enrolled: 929, graduated: 420 },
+        { name: "Music & Audio", enrolled: 247, graduated: 121 }
+      ]
+    }
+  },
+  pair2: {
+    title: "Cohort 10 (PF) & Cohort 2 (Tech Spec)",
+    pf: {
+      name: "Professional Foundations Cohort 10",
+      dates: "30 June 2025 - 22 Sep 2025",
+      stats: { enrolled: 3649, graduated: 1196 },
+      tracks: [
+        { name: "AI for creatives", enrolled: 400, graduated: 141 },
+        { name: "Content Creation", enrolled: 1346, graduated: 440 },
+        { name: "Graphic Design", enrolled: 1556, graduated: 512 },
+        { name: "Music & Audio", enrolled: 347, graduated: 103 }
+      ]
+    },
+    spec: {
+      name: "Creative Tech Lite Specialization Cohort 2",
+      dates: "13 Oct 2025 - 23 Feb 2026",
+      stats: { enrolled: 1092 },
+      tracks: [
+        { name: "AI for creatives", enrolled: 597 },
+        { name: "Content Creation", enrolled: 213 },
+        { name: "Graphic Design", enrolled: 65 },
+        { name: "Music & Audio", enrolled: 217 }
+      ]
+    }
+  },
+  pair3: {
+    title: "Cohort 11 (PF) & Cohort 3 (Tech Spec)",
+    pf: {
+      name: "Professional Foundations Cohort 11",
+      dates: "22 Sep 2025 - 15 Dec 2025",
+      stats: { enrolled: 2502 },
+      tracks: [
+        { name: "Content Creation", enrolled: 1214 },
+        { name: "Graphic Design", enrolled: 1288 }
+      ]
+    },
+    spec: {
+      name: "Creative Tech Lite Specialization Cohort 3",
+      dates: "12 Jan 2026 - 11 May 2026",
+      stats: { status: "Planning Phase" },
+      tracks: [
+        { name: "Graphic Design" },
+        { name: "Content creation" }
+      ]
+    }
+  }
 };
 
 // --- Parsed CSV Data Integration ---
@@ -471,6 +547,73 @@ const SimpleBarChart = ({ data, total }) => {
     </div>
   );
 };
+
+const MetricCard = ({ title, dates, stats, tracks, colorClass = "bg-blue-50 text-blue-700" }) => (
+  <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden flex flex-col h-full">
+    <div className="p-5 border-b border-gray-100 bg-gray-50/50">
+      <div className="flex justify-between items-start mb-2">
+        <h4 className="font-semibold text-gray-800 text-lg leading-tight">{title}</h4>
+        <div className={`p-1.5 rounded-md ${colorClass} bg-opacity-10 shrink-0`}>
+          <CalendarRange size={16} />
+        </div>
+      </div>
+      <div className="text-xs text-gray-500 font-medium flex items-center gap-1.5">
+        <Calendar size={12} />
+        {dates}
+      </div>
+    </div>
+    
+    <div className="p-5 flex-1 flex flex-col gap-6">
+      {/* High Level Stats */}
+      <div className="grid grid-cols-2 gap-4">
+        {stats.enrolled !== undefined && (
+          <div>
+            <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Enrolled</div>
+            <div className="text-2xl font-bold text-gray-900">{stats.enrolled.toLocaleString()}</div>
+          </div>
+        )}
+        {stats.graduated !== undefined && (
+          <div>
+            <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Graduated</div>
+            <div className="text-2xl font-bold text-green-600">{stats.graduated.toLocaleString()}</div>
+          </div>
+        )}
+        {stats.status && (
+           <div className="col-span-2">
+            <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Status</div>
+            <div className="text-lg font-medium text-gray-700 italic">{stats.status}</div>
+          </div>
+        )}
+      </div>
+
+      {/* Tracks Breakdown */}
+      {tracks && tracks.length > 0 && (
+        <div className="border-t border-gray-100 pt-4 mt-auto">
+          <div className="text-xs font-semibold text-gray-400 uppercase mb-3">Track Breakdown</div>
+          <div className="space-y-2">
+            {tracks.map((track, idx) => (
+              <div key={idx} className="flex justify-between items-center text-sm">
+                <span className="text-gray-600 truncate mr-2">{track.name}</span>
+                <div className="flex gap-3 text-xs font-medium">
+                  {track.enrolled !== undefined && (
+                    <span className="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded" title="Enrolled">
+                      {track.enrolled.toLocaleString()}
+                    </span>
+                  )}
+                  {track.graduated !== undefined && (
+                    <span className="bg-green-50 text-green-700 px-1.5 py-0.5 rounded border border-green-100" title="Graduated">
+                      {track.graduated.toLocaleString()}
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+);
 
 const ItemModal = ({ isOpen, onClose, activeView, onSave, itemToEdit, onDelete }) => {
   const [formData, setFormData] = useState({
@@ -1347,7 +1490,16 @@ export default function App() {
                     />
                   </div>
                 )})}
-                <div className="w-24 px-2 py-3 border-l border-gray-200 text-center bg-gray-50">Edit</div>
+                <div className="w-24 px-2 py-3 border-l border-gray-200 text-center bg-gray-50 flex items-center justify-center gap-2">
+                  <span>Edit</span>
+                  <button 
+                    onClick={() => setIsFullScreen(!isFullScreen)} 
+                    className="p-1 hover:bg-gray-200 rounded text-gray-500 transition-colors"
+                    title={isFullScreen ? "Exit Full Screen" : "Full Screen Table"}
+                  >
+                    {isFullScreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
+                  </button>
+                </div>
               </div>
 
               {/* Table Body */}
@@ -1417,140 +1569,43 @@ export default function App() {
           </div>
         ) : activeView === VIEWS.TECH_DECK ? (
           // --- CREATE TECH DASHBOARD (split: Professional Foundations & Creative Tech Specialization) ---
-          <div className="flex-1 overflow-auto bg-gray-50 p-8">
-            <div className="w-full max-w-7xl mx-auto space-y-8">
+          <div className="flex-1 overflow-auto bg-gray-50/30 p-10">
+            <div className="w-full mx-auto space-y-12">
               <div>
                 <h2 className="text-2xl font-bold text-gray-800 mb-2">Creative Tech Dashboard</h2>
-                
+                <p className="text-gray-500">Cohort progression and track performance metrics.</p>
               </div>
 
-              {/* Professional Foundations */}
-              <section aria-labelledby="prof-foundations" className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <h3 id="prof-foundations" className="text-lg font-semibold text-gray-800">Creative Tech Specialization</h3>
-                  <div className="text-sm text-gray-400">Cohort snapshots & specialisations</div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                    <h4 className="text-xs text-gray-500 uppercase tracking-wide">Item Annual Target</h4>
-                    <div className="mt-3 flex items-end justify-between">
-                      <div>
-                        <div className="text-3xl font-bold">Paid learners</div>
-                        <div className="text-sm text-gray-500">Annual target</div>
-                      </div>
-                      <div className="text-4xl font-extrabold text-blue-600">18,000</div>
-                    </div>
+              {Object.entries(TECH_METRICS).map(([key, pair], index) => (
+                <section key={key} aria-labelledby={`section-${key}`} className="space-y-6">
+                  <div className="flex items-center justify-between border-b border-gray-200 pb-2">
+                    <h3 id={`section-${key}`} className="text-lg font-bold text-gray-700 flex items-center gap-2">
+                      <span className="bg-gray-200 text-gray-600 text-xs px-2 py-1 rounded-full uppercase tracking-wider">Cycle {index + 1}</span>
+                      {pair.title}
+                    </h3>
                   </div>
 
-                  <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                    <h4 className="text-xs text-gray-500 uppercase tracking-wide">Graduation Rate</h4>
-                    <div className="mt-3 flex items-end justify-between">
-                      <div>
-                        <div className="text-3xl font-bold">Graduates</div>
-                        <div className="text-sm text-gray-500">Annual expected</div>
-                      </div>
-                      <div className="text-4xl font-extrabold text-green-600">9,000</div>
-                    </div>
-                  </div>
-                </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {/* Professional Foundations Card */}
+                    <MetricCard 
+                      title={pair.pf.name}
+                      dates={pair.pf.dates}
+                      stats={pair.pf.stats}
+                      tracks={pair.pf.tracks}
+                      colorClass="bg-indigo-50 text-indigo-700"
+                    />
 
-                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Selection Dashboard — Tracks Overview</h3>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm text-left">
-                      <thead>
-                        <tr className="text-xs text-gray-500 uppercase">
-                          <th className="py-2 pr-4">Track</th>
-                          <th className="py-2 pr-4">Started Application</th>
-                          <th className="py-2 pr-4">Total Enrolled</th>
-                          <th className="py-2 pr-4">Total Paid</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y">
-                        {[
-                          { name: 'AI for creatives', started: 4200, enrolled: 3200, paid: 2800 },
-                          { name: 'Music and Audio Production', started: 3800, enrolled: 3000, paid: 2600 },
-                          { name: 'Graphic Design', started: 2500, enrolled: 2100, paid: 1800 },
-                          { name: 'Content creation', started: 2700, enrolled: 2200, paid: 1900 }
-                        ].map((row, idx) => (
-                          <tr key={idx} className="hover:bg-gray-50">
-                            <td className="py-3 pr-4 font-medium text-gray-900">{row.name}</td>
-                            <td className="py-3 pr-4 text-gray-600">{formatNumber(row.started)}</td>
-                            <td className="py-3 pr-4 text-gray-600">{formatNumber(row.enrolled)}</td>
-                            <td className="py-3 pr-4 text-gray-600">{formatNumber(row.paid)}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                    {/* Tech Spec Card */}
+                    <MetricCard 
+                      title={pair.spec.name}
+                      dates={pair.spec.dates}
+                      stats={pair.spec.stats}
+                      tracks={pair.spec.tracks}
+                      colorClass="bg-teal-50 text-teal-700"
+                    />
                   </div>
-                </div>
-              </section>
-
-              {/* Professional Foundations */}
-              <section aria-labelledby="ct-specialization" className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <h3 id="ct-specialization" className="text-lg font-semibold text-gray-800">Professional Foundations</h3>
-                  
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                    <h4 className="text-sm font-semibold text-gray-800">Cohort 9</h4>
-                    <div className="mt-4 text-gray-700">
-                      <div className="flex justify-between"><span>Total Enrolled</span><strong>{formatNumber(3385)}</strong></div>
-                      <div className="flex justify-between mt-2"><span>Activated</span><strong>{formatNumber(786)}</strong></div>
-                      <div className="text-xs text-gray-400 mt-3">Conversion: 23%</div>
-                    </div>
-                  </div>
-
-                  <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                    <h4 className="text-sm font-semibold text-gray-800">Cohort 10</h4>
-                    <div className="mt-4 text-gray-700">
-                      <div className="flex justify-between"><span>Total Enrolled</span><strong>{formatNumber(3649)}</strong></div>
-                      <div className="flex justify-between mt-2"><span>Activated</span><strong>{formatNumber(2007)}</strong></div>
-                      <div className="text-xs text-gray-400 mt-3">Week 13 grace period</div>
-                    </div>
-                  </div>
-
-                  <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                    <h4 className="text-sm font-semibold text-gray-800">Cohort 11</h4>
-                    <div className="mt-4 text-gray-700">
-                      <div className="flex justify-between"><span>Total Enrolled</span><strong>{formatNumber(2508)}</strong></div>
-                      <div className="flex justify-between mt-2"><span>Activated</span><strong>{formatNumber(1442)}</strong></div>
-                      <div className="text-xs text-gray-400 mt-3">Week 12</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Cohort Specialisations Snapshot</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div>
-                      <h4 className="text-sm font-medium mb-2">Cohort 1</h4>
-                      <ul className="text-sm text-gray-600 space-y-2">
-                        <li>AI for creatives — Enrolled: 420</li>
-                        <li>Music and Audio Production — Enrolled: 380</li>
-                        <li>Graphic Design — Enrolled: 250</li>
-                        <li>Content creation — Enrolled: 270</li>
-                      </ul>
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-medium mb-2">Cohort 2</h4>
-                      <ul className="text-sm text-gray-600 space-y-2">
-                        <li>AI for creatives — Enrolled: 320</li>
-                        <li>Music and Audio Production — Enrolled: 300</li>
-                        <li>Graphic Design — Enrolled: 210</li>
-                        <li>Content creation — Enrolled: 220</li>
-                      </ul>
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-medium mb-2">Cohort 3</h4>
-                      <p className="text-sm text-gray-500">Yet to start — planning phase.</p>
-                    </div>
-                  </div>
-                </div>
-              </section>
+                </section>
+              ))}
             </div>
           </div>
         ) : null}
